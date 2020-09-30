@@ -1,0 +1,102 @@
+openapi: 3.0.0
+info:
+  description: Example API
+  version: 1.0.0
+  title: Example
+servers:
+  - url: http://0.0.0.0
+    description: Server address
+tags:
+  - name: "Example"
+    description: "example"
+paths:
+  /example:
+    post:
+      tags:
+        - "Example"
+      summary: "Create example"
+      description: Example
+      operationId: "exampleOperation"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExampleSchema'
+            example:
+              ExternalID: "91058280074"
+              Type: "EXAMPLE"
+              Date: "2020-07-09T18:57:07+00:00"
+              Value: 30.55
+      responses:
+        "201":
+          description: "Created"
+        "400":
+          description: "Bad request sent"
+          content:
+            application /json:
+              schema:
+                $ref: "#/components/schemas/Exception"
+              examples:
+                BadRequest:
+                  value:
+                    namespace: "EXAMPLE"
+                    name: "BAD_REQUEST_ERROR"
+                    message: "Invalid request"
+                    details:
+                      field: "/Value"
+                      issue: "'abc' is not of type number"
+                      location: "body"
+                    debug_id: null
+                    information_link: null
+                    timestamp: "2020-05-29T16:37:56.642279"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exception"
+components:
+  schemas:
+    Exception:
+      type: object
+      required:
+        - namespace
+        - name
+        - message
+        - channel
+        - debug_id
+      properties:
+        namespace:
+          type: string
+        name:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+        debug_id:
+          type: string
+        information_link:
+          type: string
+    ExampleSchema:
+      type: object
+      required:
+        - ExternalID
+        - Type
+        - Date
+        - Value
+      properties:
+        ExternalID:
+          type: string
+        Type:
+          type: string
+          enum:
+            - "EXAMPLE"
+            - "OTHER_EXAMPLE"
+        Date:
+          type: string
+          format: date-time
+        Value:
+          type: number
+          multipleOf: 0.01
