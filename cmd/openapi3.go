@@ -15,17 +15,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	DefaultContent = "application/json"
-	DefaultStatus  = http.StatusOK
-	DefaultAddr    = ":8085"
-)
-
 var (
-	content string
-	status  int
-	addr    string
-
 	openApi3Cmd = &cobra.Command{
 		Use:   "openapi3 [OpenAPI3 file path]",
 		Short: "Mocks an API",
@@ -36,9 +26,6 @@ var (
 )
 
 func init() {
-	openApi3Cmd.Flags().StringVar(&content, "content", DefaultContent, "Response Content-type")
-	openApi3Cmd.Flags().StringVar(&addr, "port", DefaultAddr, "Server listening port")
-	openApi3Cmd.Flags().IntVar(&status, "status", DefaultStatus, "Response Status")
 	rootCmd.AddCommand(openApi3Cmd)
 }
 

@@ -2,16 +2,26 @@ package cmd
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
+const (
+	DefaultPort    = ":6666"
+	DefaultStatus  = http.StatusOK
+	DefaultContent = "application/json"
+)
+
 var (
 	// Used for flags.
 	cfgFile     string
 	userLicense string
+	content     string
+	status      int
+	addr        string
 
 	rootCmd = &cobra.Command{
 		Use:   "gothmock [API specification] [filepath]",
@@ -34,10 +44,22 @@ func init() {
 	rootCmd.PersistentFlags().StringP("author", "a", "Renan Ferreira <https://github.com/renanferr>", "author name for copyright attribution")
 	rootCmd.PersistentFlags().StringVarP(&userLicense, "license", "l", "", "name of license for the project")
 	rootCmd.PersistentFlags().Bool("viper", true, "use Viper for configuration")
+
+	rootCmd.PersistentFlags().StringVar(&addr, "port", DefaultPort, "port to run application server on")
+	rootCmd.PersistentFlags().StringVar(&content, "content", DefaultContent, "response content-type")
+	rootCmd.PersistentFlags().IntVar(&status, "status", DefaultStatus, "response status code")
+
 	viper.BindPFlag("author", rootCmd.PersistentFlags().Lookup("author"))
 	viper.BindPFlag("useViper", rootCmd.PersistentFlags().Lookup("viper"))
 	viper.SetDefault("author", "Renan Ferreira <https://github.com/renanferr>")
 	viper.SetDefault("license", "MIT")
+
+	viper.BindPFlag("port", rootCmd.PersistentFlags().Lookup("port"))
+	viper.BindPFlag("content", rootCmd.PersistentFlags().Lookup("content"))
+	viper.BindPFlag("status", rootCmd.PersistentFlags().Lookup("status"))
+	viper.SetDefault("port", DefaultPort)
+	viper.SetDefault("content", DefaultContent)
+	viper.SetDefault("status", DefaultStatus)
 }
 
 func initConfig() {
