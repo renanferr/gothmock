@@ -3,14 +3,59 @@ info:
   description: Example API
   version: 1.0.0
   title: Example
-servers:
-  - url: http://0.0.0.0
-    description: Server address
 tags:
   - name: "Example"
     description: "example"
 paths:
   /example:
+    get:
+      tags:
+        - "Example"
+      summary: "Get example"
+      description: Get Example Operation
+      operationId: "getExampleOperation"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExampleSchema"
+              example:
+                ExternalID: "91058280074"
+                Type: "EXAMPLE"
+                Date: "2020-07-09T18:57:07+00:00"
+                Value: 30.55
+        "404":
+          description: "Not found"
+          content:
+            application /json:
+              schema:
+                $ref: "#/components/schemas/Exception"
+              example:
+                namespace: "EXAMPLE"
+                name: "BAD_REQUEST_ERROR"
+                message: "Invalid request"
+                details:
+                  field: "/Value"
+                  issue: "'abc' is not of type number"
+                  location: "body"
+                debug_id: null
+                information_link: null
+                timestamp: "2020-05-29T16:37:56.642279"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exception"
+              example:
+                namespace: "EXAMPLE"
+                name: "INTERNAL_SERVER_ERROr"
+                message: "Internal Server Error"
+                debug_id: null
+                information_link: null
+                timestamp: "2020-05-29T16:37:56.642279"
     post:
       tags:
         - "Example"
