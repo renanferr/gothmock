@@ -18,9 +18,9 @@ Flags may also be specified to determine in which port the server will listen an
 
 ### Usage Examples: 
 ```bash
-gothmock openapi3 ./example/openapi3/example.yml
+$ gothmock openapi3 ./example/openapi3/example.yml
 ```
 
 ```bash
-gothmock openapi3 https://raw.githubusercontent.com/renanferr/gothmock/master/example/openapi3/example.yml --port 8080 --status 500 --content application/json
+$ gothmock openapi3 https://raw.githubusercontent.com/renanferr/gothmock/master/example/openapi3/example.yml --port 8080 --status 500 --content application/json
 ```
