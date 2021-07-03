@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"strings"
@@ -41,14 +43,13 @@ func init() {
 }
 
 func MockOpenApi3(cmd *cobra.Command, args []string) {
-	filepath := args[0]
-	swagger, err := swagger.NewSwaggerLoader().LoadSwaggerFromFile(filepath)
+	spec, err := LoadOpenApi3Spec(args[0])
 	if err != nil {
-		log.Fatalf("Error loading swagger file: %s", err)
+		log.Fatal(fmt.Errorf("error loading OpenAPI3 specification file: %w", err))
 	}
 
 	handler := openapi3.NewHandler().
-		WithSpec(swagger).
+		WithSpec(spec).
 		WithOptions(openapi3.NewHandlerOptions(status, content))
 
 	ListenAndServe(handler.Get(), GetAddr())
@@ -71,4 +72,19 @@ func GetAddr() string {
 		addr = ":" + addr
 	}
 	return addr
+}
+
+func LoadOpenApi3Spec(filePath string) (*swagger.Swagger, error) {
+	if strings.HasPrefix(filePath, "http") {
+		return loadOpenApi3SpecFromURI(filePath)
+	}
+	return swagger.NewSwaggerLoader().LoadSwaggerFromFile(filePath)
+}
+
+func loadOpenApi3SpecFromURI(uri string) (*swagger.Swagger, error) {
+	loc, err := url.Parse(uri)
+	if err != nil {
+		return nil, err
+	}
+	return swagger.NewSwaggerLoader().LoadSwaggerFromURI(loc)
 }
